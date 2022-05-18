@@ -46,7 +46,10 @@ module Jekyll
         end        
 
         @total_posts = posts.size
-        @posts = posts[init..offset]
+        # Slicing the posts for this page and converting OpenStructs to Ruby hash for Liquid usage.
+        @posts = posts[init..offset].map { |data_item|
+          (data_item.instance_of? OpenStruct) ? data_item.to_h[:data] : data_item
+        }
         @page_path = Utils.format_page_number(this_page_url, cur_page_nr, @total_pages)
 
         @previous_page = @page != 1 ? @page - 1 : nil
